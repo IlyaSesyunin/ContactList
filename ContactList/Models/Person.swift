@@ -14,24 +14,34 @@ struct Person {
     var fullName: String {
         "\(name) \(surname)"
     }
-    
-    static func getPerson() -> [Person] {
-        var personsList: [Person] = []
-        let shuffledNames = CastomPersons.namesList.shuffled()
-        let shuffledSurnames = CastomPersons.surnamesList.shuffled()
-        let shuffledEmails = CastomPersons.emailsList.shuffled()
-        let shuffledPhones = CastomPersons.phonesList.shuffled()
+}
+
+extension Person {
+    static func getContactList() -> [Person] {
         
-        for item in 0...shuffledNames.count - 1 {
-            personsList.append(
-                Person(
-                    name: shuffledNames[item],
-                    surname: shuffledSurnames[item],
-                    phone: shuffledPhones[item],
-                    email: shuffledEmails[item]
-                )
+        var persons: [Person] = []
+        
+        let names = DataStore.shared.names.shuffled()
+        let surnames = DataStore.shared.surnames.shuffled()
+        let emails = DataStore.shared.emails.shuffled()
+        let phones = DataStore.shared.phones.shuffled()
+        
+        let iterationCount = min(
+            names.count,
+            surnames.count,
+            emails.count,
+            phones.count)
+        
+        for index in 0..<iterationCount {
+            let person = Person(
+                name: names[index],
+                surname: surnames[index],
+                phone: phones[index],
+                email: emails[index]
             )
+            
+            persons.append(person)
         }
-        return personsList
+        return persons
     }
 }
